@@ -11,10 +11,10 @@ export class ItemsService {
   constructor(
     @InjectRepository(Item)
     private readonly itemsRepository: Repository<Item>
-  ){}
+  ) { }
 
   async create(createItemInput: CreateItemInput): Promise<Item> {
-    
+
     const newItem = this.itemsRepository.create(createItemInput);
 
     return await this.itemsRepository.save(newItem);
@@ -29,23 +29,46 @@ export class ItemsService {
 
   async findOne(id: string): Promise<Item> {
 
-    const item = await this.itemsRepository.findOneBy({id});
+    const item = await this.itemsRepository.findOneBy({ id });
 
 
-    if(!item) throw new NotFoundException(`Item with id: ${id} not found`)
+    if (!item) throw new NotFoundException(`Item with id: ${id} not found`)
 
 
 
     return item;
 
-    
+
   }
 
-  update(id: number, updateItemInput: UpdateItemInput) {
-    return `This action updates a #${id} item`;
+  async update(id: string, updateItemInput: UpdateItemInput): Promise<Item> {
+
+    const item = await this.itemsRepository.findOneBy({ id });
+    if (!item) {
+      throw new NotFoundException('Item not found');
+    }
+
+    // Actualizar las propiedades del item con los valores de updateItemInput
+    item.name = updateItemInput?.name ? updateItemInput.name : item.name;
+    item.quantity = updateItemInput?.quantity ? updateItemInput.quantity : item.quantity;
+    item.quantityUnits = updateItemInput?.quantityUnits ? updateItemInput.quantityUnits : item.quantityUnits;
+
+    // Guardar los cambios en la base de datos
+    await this.itemsRepository.save(item);
+
+    return item;
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} item`;
+  async remove(id: string): Promise<Item> {
+    const item = await this.itemsRepository.findOneBy({ id }); // Cambio "findOneBy" a "findOne"
+    if (!item) {
+      throw new NotFoundException('Item not found');
+    }
+
+    await this.itemsRepository.delete({ id });  
+  
+    return item
   }
+  
 }
