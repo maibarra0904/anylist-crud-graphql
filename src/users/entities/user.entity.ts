@@ -18,7 +18,7 @@ export class User {
   email: string;
 
   @Column()
-  @Field(() => String)
+  //@Field(() => String)
   password: string;
 
   @Column({
