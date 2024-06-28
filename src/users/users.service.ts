@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import * as bcrypt from 'bcrypt'
 
 import { User } from './entities/user.entity';
 import { SignupInput } from '../auth/dto/input/signup.input';
@@ -19,7 +20,10 @@ export class UsersService {
   async create (signupInput: SignupInput): Promise<User> {
 
     try {
-      const newUser = this.usersRepository.create(signupInput);
+      const newUser = this.usersRepository.create({
+        ...signupInput,
+        password: bcrypt.hashSync( signupInput.password, 10)
+      });
       return await this.usersRepository.save(newUser)
 
     } catch (error) {
@@ -31,8 +35,15 @@ export class UsersService {
     return [];
   }
 
-  findOne(id: string): Promise<User> {
-    throw new Error( `findOne not implemented for ${id}`)
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+      return await this.usersRepository.findOneByOrFail({email})
+    } catch (error) {
+      this.handleDBErrors( {
+        code: 'error-001',
+        detail: 'Usuario No encontrado'
+      })
+    }
   }
 
   // update(id: number, updateUserInput: UpdateUserInput) {
@@ -48,6 +59,10 @@ export class UsersService {
     this.logger.error(error)
 
     if( error.code = '23505') {
+      throw new BadRequestException(error.detail.replace('Key ',''))
+    }
+
+    if( error.code = 'error-001') {
       throw new BadRequestException(error.detail.replace('Key ',''))
     }
 
