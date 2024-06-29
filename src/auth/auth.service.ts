@@ -5,18 +5,25 @@ import { AuthResponse } from './types/auth-response.type';
 import { UsersService } from 'src/users/users.service';
 import { LoginInput, SignupInput } from './dto/input';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
 
     constructor(
-        private readonly usersService: UsersService
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService,
+
     ) {}
+
+    private getJwtToken(userId: string) {
+        return this.jwtService.sign({id: userId})
+    }
 
     async signup(signupInput: SignupInput): Promise<AuthResponse> {
 
         const user = await this.usersService.create(signupInput);
-        const token = '123123';
+        const token = this.getJwtToken(user.id)
 
         return {token, user}
 
@@ -31,7 +38,7 @@ export class AuthService {
             throw new Error("Invalid credentials")
         }
 
-        const token = "ABC"
+        const token = this.getJwtToken(user.id)
 
         return {
             token,
