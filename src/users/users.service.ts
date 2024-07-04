@@ -32,15 +32,15 @@ export class UsersService {
     }
   }
 
-  async findAll( roles: ValidRoles[] ): Promise<User[]> {
+  async findAll( roles?: ValidRoles[] ): Promise<User[]> {
 
     if ( roles.length === 0 ) 
-      return this.usersRepository.find(//{
-        // TODO: No es necesario porque tenemos lazy la propiedad lastUpdateBy
+      return this.usersRepository.find({
+        // TODO: No es necesario porque se tiene lazy en la propiedad lastUpdatuBy en la entity
         // relations: {
         //   lastUpdateBy: true
         // }
-      //}
+      }
     );
 
       console.log(roles)
@@ -80,11 +80,12 @@ export class UsersService {
   //   return `This action updates a #${id} user`;
   // }
 
-  async block(id: string): Promise<User> {
+  async block(id: string, admin:User): Promise<User> {
     
     const userToBlock = await this.findOneById(id);
 
     userToBlock.isActive = false;
+    userToBlock.lastUpdateBy = admin;
     
     return await this.usersRepository.save(userToBlock);
 

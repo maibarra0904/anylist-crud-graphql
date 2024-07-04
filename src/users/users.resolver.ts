@@ -17,8 +17,8 @@ export class UsersResolver {
     @Args() validRoles: ValidRolesArgs,
     @CurrentUser([ValidRoles.admin, ValidRoles.superUser ]) user: User
   ):Promise<User[]> {
-    //console.log(user)
-    return this.usersService.findAll( validRoles.roles );
+    console.log(user)
+    return this.usersService.findAll( validRoles?.roles || null );
   }
 
   @Query(() => User, { name: 'user' })
@@ -40,6 +40,6 @@ export class UsersResolver {
     @Args('id', { type: () => String }) id: string,
     @CurrentUser([ValidRoles.admin ]) user: User
   ): Promise<User> {
-    return this.usersService.block(id);
+    return this.usersService.block(id, user);
   }
 }
