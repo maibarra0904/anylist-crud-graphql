@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -35,8 +35,11 @@ export class UsersResolver {
   //   return this.usersService.update(updateUserInput.id, updateUserInput);
   // }
 
-  @Mutation(() => User)
-  blockUser(@Args('id', { type: () => Int }) id: string): Promise<User> {
+  @Mutation(() => User, {name: 'blockUser'})
+  blockUser(
+    @Args('id', { type: () => String }) id: string,
+    @CurrentUser([ValidRoles.admin ]) user: User
+  ): Promise<User> {
     return this.usersService.block(id);
   }
 }
