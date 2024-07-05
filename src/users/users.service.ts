@@ -6,6 +6,7 @@ import { SignupInput } from '../auth/dto/input/signup.input';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ValidRoles } from '../auth/enums/valid-roles.enum';
+import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UsersService {
@@ -76,9 +77,25 @@ export class UsersService {
     }
   }
 
-  // update(id: number, updateUserInput: UpdateUserInput) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async update(id: string, updateUserInput: UpdateUserInput, admin: User): Promise<User> {
+    
+    try {
+      
+      const user = await this.findOneById(id)
+
+      user.lastUpdateBy = admin;
+      user.email = updateUserInput?.email ? updateUserInput.email : user.email; 
+      user.fullName = updateUserInput?.fullName? updateUserInput.fullName : user.fullName;
+      user.roles = updateUserInput?.roles? updateUserInput.roles : user.roles;  // TODO: Validar que solo administradores puedan modificar roles
+      user.isActive = updateUserInput?.isActive? updateUserInput.isActive : user.isActive;  // TODO: Validar que solo administradores puedan desactivar usuarios
+
+      return await this.usersRepository.save(user);
+      
+
+    } catch (error) {
+     console.log(error) 
+    }
+  }
 
   async block(id: string, admin:User): Promise<User> {
     
