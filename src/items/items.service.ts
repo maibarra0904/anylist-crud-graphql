@@ -24,8 +24,16 @@ export class ItemsService {
 
   }
 
-  async findAll(): Promise<Item[]> {
-    return this.itemsRepository.find();
+  async findAll(user: User): Promise<Item[]> {
+    const {id} = user
+    
+    return this.itemsRepository.find({
+      where: {
+        user: {
+          id
+        }
+      }
+    });
   }
 
   async findOne(id: string): Promise<Item> {
