@@ -29,17 +29,26 @@ export class ItemsResolver {
   }
 
   @Query(() => Item, { name: 'item' })
-  async findOne(@Args('id', { type: () => ID }) id: string) {
-    return this.itemsService.findOne(id);
+  async findOne(
+    @Args('id', { type: () => ID }) id: string,
+    @CurrentUser() user: User
+  ) {
+    return this.itemsService.findOne(id, user);
   }
 
   @Mutation(() => Item)
-  updateItem(@Args('updateItemInput') updateItemInput: UpdateItemInput): Promise<Item> {
-    return this.itemsService.update(updateItemInput.id, updateItemInput);
+  updateItem(
+    @Args('updateItemInput') updateItemInput: UpdateItemInput,
+    @CurrentUser() user: User
+  ): Promise<Item> {
+    return this.itemsService.update(updateItemInput.id, updateItemInput, user);
   }
 
   @Mutation(() => Item)
-  removeItem(@Args('id', { type: () => ID }) id: string):Promise<Item> {
-    return this.itemsService.remove(id);
+  removeItem(
+    @Args('id', { type: () => ID }) id: string,
+    @CurrentUser() user: User
+  ):Promise<Item> {
+    return this.itemsService.remove(id, user);
   }
 }
