@@ -50,5 +50,5 @@ export class User {
   //@OneToMany( () => List, (list) => list.user )
   // @Field( () => [Item] )
   //lists: List[];
-  
+
 }

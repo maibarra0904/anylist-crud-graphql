@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ResolveField, Int, Parent } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -7,11 +7,15 @@ import { ValidRoles } from '../auth/enums/valid-roles.enum';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateUserInput } from './dto/update-user.input';
+import { ItemsService } from 'src/items/items.service';
 
 @Resolver(() => User)
 @UseGuards( JwtAuthGuard )
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly itemsService: ItemsService
+  ) {}
 
   @Query(() => [User], { name: 'users' })
   async findAll(
@@ -45,5 +49,13 @@ export class UsersResolver {
     @CurrentUser([ValidRoles.admin ]) user: User
   ): Promise<User> {
     return this.usersService.block(id, user);
+  }
+
+  @ResolveField(() => Int, {name: 'itemCount'})
+  async itemCount(
+    @Parent() user:User,
+    //@CurrentUser([ValidRoles.admin ]) adminUser: User
+  ): Promise<number> {
+    return this.itemsService.itemCountByUser(user)
   }
 }
