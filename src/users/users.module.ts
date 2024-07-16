@@ -13,8 +13,7 @@ import { ItemsModule } from '../items/items.module';
   ],
   exports: [
     UsersService,
-    UsersResolver,
-    TypeOrmModule.forFeature([ User ])
+    TypeOrmModule
   ]
 })
 export class UsersModule {}

@@ -10,7 +10,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
 //import { JwtService } from '@nestjs/jwt';
-
+import { SeedModule } from './seed/seed.module';
 @Module({
   imports: [
 
@@ -68,7 +68,7 @@ import { JwtService } from '@nestjs/jwt';
     autoLoadEntities: true,
     schema: 'anylist', // Aquí defines el nombre del esquema que deseas utilizar
   } as TypeOrmModuleOptions), 
-  ItemsModule, UsersModule, AuthModule
+  ItemsModule, UsersModule, AuthModule, SeedModule
 ],
   controllers: [],
   providers: [],
