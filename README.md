@@ -5,7 +5,7 @@
 # Dev
 
 1. Clonar el proyecto
-2. Copiar el ```env.template``` y renombrar a ```.env```
+2. Crear el archivo ```.env``` tomando en cuenta las variables de entorno en ```env.txt```
 3. Ejecutar
 ```
 npm install
