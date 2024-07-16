@@ -15,7 +15,7 @@ export class Item {
   name: string;
 
   @Column()
-  @Field( () => Float )
+  @Field( () => Float, { nullable: true })
   quantity: number;
 
   @Column({ nullable: true })
