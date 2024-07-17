@@ -9,8 +9,8 @@ type User {
   roles: [String!]!
   isActive: Boolean!
   lastUpdateBy: User
-  items: [Item!]!
   itemCount: Int!
+  items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
 }
 
 type Item {
@@ -30,7 +30,7 @@ type Query {
   revalidate: AuthResponse!
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: String!): User!
-  items: [Item!]!
+  items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
 }
 

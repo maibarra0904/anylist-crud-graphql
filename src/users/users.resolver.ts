@@ -7,7 +7,9 @@ import { ValidRoles } from '../auth/enums/valid-roles.enum';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateUserInput } from './dto/update-user.input';
-import { ItemsService } from 'src/items/items.service';
+import { ItemsService } from '../items/items.service';
+import { Item } from '../items/entities/item.entity';
+import { PaginationArgs, SearchArgs } from '../common/dto/args';
 
 @Resolver(() => User)
 @UseGuards( JwtAuthGuard )
@@ -58,5 +60,16 @@ export class UsersResolver {
   ): Promise<number> {
     console.log(adminUser)
     return this.itemsService.itemCountByUser(user)
+  }
+
+  @ResolveField(() => [Item], {name: 'items'})
+  async getItemsByUser(
+    @Parent() user:User,
+    @CurrentUser([ValidRoles.admin ]) adminUser: User,
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
+  ): Promise<Item[]> {
+    console.log(adminUser)
+    return this.itemsService.findAll(user, paginationArgs, searchArgs)
   }
 }

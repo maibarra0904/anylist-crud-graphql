@@ -4,6 +4,8 @@ import { Item } from './entities/item.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
+import { PaginationArgs } from '../common/dto/args/pagination.args';
+import { SearchArgs } from '../common/dto/args/search.args';
 
 
 @Injectable()
@@ -24,16 +26,34 @@ export class ItemsService {
 
   }
 
-  async findAll(user: User): Promise<Item[]> {
-    const {id} = user
+  async findAll(user: User, paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<Item[]> {
     
-    return this.itemsRepository.find({
-      where: {
-        user: {
-          id
-        }
-      }
-    });
+    const {id} = user
+    const {limit, offset} = paginationArgs
+    const {search} = searchArgs
+    
+    const queryBuilder = this.itemsRepository.createQueryBuilder()
+      .take(limit)
+      .skip(offset)
+      .where(`"userId" = :userId`, { userId: id })
+
+    if(search) queryBuilder.andWhere(`"name" ILIKE :search`, { search: `%${search}%` });
+
+    return queryBuilder.getMany();
+
+    // return this.itemsRepository.find({
+    //   take: limit,
+    //   skip: offset,
+    //   where: {
+    //     user: {
+    //       id
+    //     },
+    //     name: Like(`%${search}%`)
+    //   }
+    // });
+
+
+
   }
 
   async findOne(id: string, user: User): Promise<Item> {
