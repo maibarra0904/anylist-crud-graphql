@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type List {
+  id: ID!
+  name: String!
+  user: User!
+}
+
 type User {
   id: ID!
   fullName: String!
@@ -9,6 +15,7 @@ type User {
   roles: [String!]!
   isActive: Boolean!
   lastUpdateBy: User
+  lists: [Item!]!
   itemCount: Int!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
 }
@@ -32,6 +39,8 @@ type Query {
   user(id: String!): User!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
+  lists: [List!]!
+  list(id: Int!): List!
 }
 
 """
@@ -54,6 +63,9 @@ type Mutation {
 
   """Ejecuta la construccion de la BD"""
   executeSeed: Boolean!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: Int!): List!
 }
 
 input SignupInput {
@@ -87,4 +99,15 @@ input UpdateItemInput {
   quantity: Float
   quantityUnits: String
   id: ID!
+}
+
+input CreateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateListInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

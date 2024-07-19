@@ -12,6 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 //import { JwtService } from '@nestjs/jwt';
 import { SeedModule } from './seed/seed.module';
 import { CommonModule } from './common/common.module';
+import { ListsModule } from './lists/lists.module';
 @Module({
   imports: [
 
@@ -69,7 +70,7 @@ import { CommonModule } from './common/common.module';
     autoLoadEntities: true,
     schema: 'anylist', // Aquí defines el nombre del esquema que deseas utilizar
   } as TypeOrmModuleOptions), 
-  ItemsModule, UsersModule, AuthModule, SeedModule, CommonModule
+  ItemsModule, UsersModule, AuthModule, SeedModule, CommonModule, ListsModule
 ],
   controllers: [],
   providers: [],
