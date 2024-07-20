@@ -1,13 +1,14 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { User } from '../../users/entities/user.entity';
-import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ListItem } from '../../list-item/entities/list-item.entity';
 
 @Entity({ name: 'lists' })
 @ObjectType()
 export class List {
   
   @PrimaryGeneratedColumn('uuid')
-  @Field( () => ID)
+  @Field( () => String)
   id: string;
 
   @Column()
@@ -19,4 +20,8 @@ export class List {
   @Index('userId-list-index')
   @Field( () => User )
   user: User;
+
+  @OneToMany( () => ListItem, (listItem) => listItem.list, { lazy: true })
+  // @Field( () => [ListItem] )
+  listItem: ListItem[];
 }
