@@ -7,7 +7,7 @@ import { ListItem } from '../../list-item/entities/list-item.entity';
 @ObjectType()
 export class List {
   
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('increment')
   @Field( () => String)
   id: string;
 

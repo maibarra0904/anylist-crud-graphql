@@ -8,9 +8,12 @@ import { List } from './../../lists/entities/list.entity';
 @Unique('listItem-item', ['list','item'])
 @ObjectType()
 export class ListItem {
+  //@PrimaryGeneratedColumn('uuid')
+  //@Field( () => ID )
+  //id: string;
 
-  @PrimaryGeneratedColumn('uuid')
-  @Field( () => ID )
+  @PrimaryGeneratedColumn('increment')
+  @Field( () => ID)
   id: string;
 
   @Column({ type: 'numeric' })

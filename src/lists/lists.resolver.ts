@@ -1,4 +1,4 @@
-import { UseGuards, ParseUUIDPipe } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
 
 import { ListsService } from './lists.service';
@@ -45,7 +45,7 @@ export class ListsResolver {
 
   @Query(() => List, { name: 'list' })
   async findOne(
-    @Args('id', { type: () => ID }, ParseUUIDPipe ) id: string,
+    @Args('id', { type: () => ID },  ) id: string,
     @CurrentUser() user: User
   ): Promise<List> {
     return this.listsService.findOne( id, user );

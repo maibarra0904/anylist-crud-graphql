@@ -1,5 +1,5 @@
 import { InputType,  Field, ID } from '@nestjs/graphql';
-import { IsBoolean, IsNumber, IsOptional,IsString, IsUUID, Min } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional,IsString, Min } from 'class-validator';
 
 @InputType()
 export class CreateListItemInput {
@@ -16,7 +16,7 @@ export class CreateListItemInput {
   completed: boolean = false;
 
   @Field( () => ID )
-  @IsUUID()
+  @IsString() //@IsUUID()
   listId: string;
 
   @Field( () => ID )
